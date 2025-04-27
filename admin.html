@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaiganPDF - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="image.png">
+    <style>
+        /* BaiganPDF Admin - Black Neon Theme */
+        :root {
+            --neon-blue: #08f;
+            --neon-pink: #f0f;
+            --neon-green: #0f8;
+            --bg-dark: #121212;
+            --bg-darker: #0a0a0a;
+            --text-light: #e0e0e0;
+            --border-glow: 0 0 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .admin-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--bg-darker);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.1);
+        }
+
+        /* Header Styles */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: rgba(10, 10, 10, 0.9);
+            border-bottom: 1px solid var(--neon-pink);
+            box-shadow: var(--border-glow) rgba(255, 0, 255, 0.3);
+        }
+
+        .admin-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-logo {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 4px var(--neon-pink));
+        }
+
+        .admin-neon-text {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink), 0 0 16px rgba(255, 0, 255, 0.3);
+        }
+
+        .admin-neon-icon {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        /* Main Content */
+        .admin-main {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 0, 255, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .admin-tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab-btn:hover {
+            color: var(--neon-pink);
+        }
+
+        .admin-tab-btn.active {
+            color: var(--neon-pink);
+            border-bottom-color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        .admin-tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .admin-section {
+            background-color: rgba(30, 30, 30, 0.8);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-section h3 {
+            margin-top: 0;
+            color: var(--neon-pink);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-pink);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 4px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-form-control:focus {
+            outline: none;
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        .admin-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: rgba(255, 0, 255, 0.1);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.3);
+        }
+
+        .admin-btn:hover {
+            background-color: rgba(255, 0, 255, 0.2);
+            box-shadow: 0 0 12px var(--neon-pink);
+            transform: translateY(-2px);
+        }
+
+        /* List Styles */
+        .admin-list {
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .admin-list-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 0, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(30, 30, 30, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .admin-list-item:hover {
+            background-color: rgba(255, 0, 255, 0.05);
+        }
+
+        .admin-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .admin-item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .admin-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .admin-btn-danger {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #ff5555;
+            border-color: #ff5555;
+        }
+
+        .admin-btn-danger:hover {
+            background-color: rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 12px #ff5555;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .admin-main {
+                padding: 1rem;
+            }
+            
+            .admin-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .admin-tab-btn {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+            
+            .admin-tab-btn.active {
+                border-left-color: var(--neon-pink);
+            }
+            
+            .admin-list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .admin-item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="admin-logo-container">
+                <img src="image.png" alt="BaiganPDF Logo" class="admin-logo">
+                <h1 class="admin-neon-text">BaiganPDF <span>Admin Panel</span></h1>
+            </div>
+            <div class="admin-nav">
+                <button id="adminBackBtn" class="admin-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Site
+                </button>
+            </div>
+        </header>
+        
+        <main class="admin-main">
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" data-tab="pdfs">
+                    <i class="fas fa-file-pdf admin-neon-icon"></i> PDFs
+                </button>
+                <button class="admin-tab-btn" data-tab="folders">
+                    <i class="fas fa-folder admin-neon-icon"></i> Folders
+                </button>
+            </div>
+            
+            <div id="pdfsTab" class="admin-tab-content active">
+                <section class="admin-section">
+                    <h3><i class="fas fa-plus-circle admin-neon-icon"></i> Add New PDF</h3>
+                    <div class="admin-form-group">
+                        <label for="adminPdfTitle"><i class="fas fa-heading"></i> Title:</label>
+                        <input type="text" id="adminPdfTitle" class="admin-form-control" placeholder="Enter PDF title">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="adminPdfLink"><i class="fas fa-link"></i> Google Drive Link:</label>
+                        <input type="text" id="adminPdfLink" class="admin-form-control" placeholder="Paste Google Drive shareable link">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="adminPdfFolder"><i class="fas fa-folder"></i> Folder:</label>
+                        <select id="adminPdfFolder" class="admin-form-control">
+                            <option value="">Root</option>
+                            <!-- Folders will be loaded here -->
+                        </select>
+                    </div>
+                    <button id="adminAddPdfBtn" class="admin-btn">
+                        <i class="fas fa-plus"></i> Add PDF
+                    </button>
+                </section>
+                
+                <section class="admin-section">
+                    <h3><i class="fas fa-list admin-neon-icon"></i> Current PDFs</h3>
+                    <div id="adminPdfList" class="admin-list">
+                        <!-- PDFs will be listed here -->
+                    </div>
+                </section>
+            </div>
+            
+            <div id="foldersTab" class="admin-tab-content">
+                <section class="admin-section">
+                    <h3><i class="fas fa-folder-plus admin-neon-icon"></i> Create New Folder</h3>
+                    <div class="admin-form-group">
+                        <label for="adminFolderName"><i class="fas fa-tag"></i> Folder Name:</label>
+                        <input type="text" id="adminFolderName" class="admin-form-control" placeholder="Enter folder name">
+                    </div>
+                    <button id="adminAddFolderBtn" class="admin-btn">
+                        <i class="fas fa-plus"></i> Create Folder
+                    </button>
+                </section>
+                
+                <section class="admin-section">
+                    <h3><i class="fas fa-folder-open admin-neon-icon"></i> Current Folders</h3>
+                    <div id="adminFolderList" class="admin-list">
+                        <!-- Folders will be listed here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // BaiganPDF Admin Script
+        const adminData = JSON.parse(localStorage.getItem('BaiganPDF')) || {
+            folders: [],
+            pdfs: []
+        };
+
+        // DOM Elements
+        const tabBtns = document.querySelectorAll('.admin-tab-btn');
+        const pdfTitleInput = document.getElementById('adminPdfTitle');
+        const pdfLinkInput = document.getElementById('adminPdfLink');
+        const pdfFolderSelect = document.getElementById('adminPdfFolder');
+        const addPdfBtn = document.getElementById('adminAddPdfBtn');
+        const pdfList = document.getElementById('adminPdfList');
+        const folderNameInput = document.getElementById('adminFolderName');
+        const addFolderBtn = document.getElementById('adminAddFolderBtn');
+        const folderList = document.getElementById('adminFolderList');
+        const backBtn = document.getElementById('adminBackBtn');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupTabs();
+            renderFolders();
+            renderPDFs();
+            
+            // Event listeners
+            backBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+            
+            addPdfBtn.addEventListener('click', addPDF);
+            addFolderBtn.addEventListener('click', addFolder);
+        });
+
+        // Tab functionality
+        function setupTabs() {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.admin-tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+                });
+            });
+        }
+
+        // Render PDFs
+        function renderPDFs() {
+            pdfList.innerHTML = '';
+            
+            if (adminData.pdfs.length === 0) {
+                pdfList.innerHTML = `
+                    <div class="admin-list-item">
+                        <div class="admin-item-info">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>No PDFs added yet</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            adminData.pdfs.forEach(pdf => {
+                const folderName = pdf.folderId ? getFolderName(pdf.folderId) : 'Root';
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="admin-item-info">
+                        <i class="fas fa-file-pdf"></i>
+                        <div>
+                            <div class="admin-item-title">${pdf.title}</div>
+                            <div class="admin-item-meta">
+                                <span><i class="fas fa-folder"></i> ${folderName}</span>
+                                <span><i class="fas fa-link"></i> ${truncateLink(pdf.link)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-item-actions">
+                        <button class="admin-btn admin-btn-sm admin-view-pdf" data-link="${pdf.link}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="admin-btn admin-btn-sm admin-btn-danger admin-delete-pdf" data-id="${pdf.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                pdfList.appendChild(item);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.admin-view-pdf').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    window.open(convertToViewLink(btn.dataset.link), '_blank');
+                });
+            });
+            
+            document.querySelectorAll('.admin-delete-pdf').forEach(btn => {
+                btn.addEventListener('click', () => deletePDF(btn.dataset.id));
+            });
+        }
+
+        // Render Folders
+        function renderFolders() {
+            pdfFolderSelect.innerHTML = '<option value="">Root</option>';
+            folderList.innerHTML = '';
+            
+            if (adminData.folders.length === 0) {
+                folderList.innerHTML = `
+                    <div class="admin-list-item">
+                        <div class="admin-item-info">
+                            <i class="fas fa-folder"></i>
+                            <span>No folders created yet</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            adminData.folders.forEach(folder => {
+                // Add to select dropdown
+                const option = document.createElement('option');
+                option.value = folder.id;
+                option.textContent = folder.name;
+                pdfFolderSelect.appendChild(option);
+                
+                // Add to folder list
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="admin-item-info">
+                        <i class="fas fa-folder"></i>
+                        <div class="admin-item-title">${folder.name}</div>
+                    </div>
+                    <div class="admin-item-actions">
+                        <button class="admin-btn admin-btn-sm admin-btn-danger admin-delete-folder" data-id="${folder.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                
+                folderList.appendChild(item);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.admin-delete-folder').forEach(btn => {
+                btn.addEventListener('click', () => deleteFolder(btn.dataset.id));
+            });
+        }
+
+        // Add PDF
+        function addPDF() {
+            const title = pdfTitleInput.value.trim();
+            const link = pdfLinkInput.value.trim();
+            const folderId = pdfFolderSelect.value || null;
+            
+            if (!title || !link) {
+                alert('Please enter both title and link');
+                return;
+            }
+            
+            if (!link.includes('drive.google.com')) {
+                alert('Please enter a valid Google Drive link');
+                return;
+            }
+            
+            const newPDF = {
+                id: generateId(),
+                title,
+                link,
+                folderId,
+                createdAt: new Date().toISOString()
+            };
+            
+            adminData.pdfs.push(newPDF);
+            saveData();
+            
+            // Clear inputs and render
+            pdfTitleInput.value = '';
+            pdfLinkInput.value = '';
+            pdfFolderSelect.value = '';
+            
+            renderPDFs();
+        }
+
+        // Add Folder
+        function addFolder() {
+            const name = folderNameInput.value.trim();
+            
+            if (!name) {
+                alert('Please enter folder name');
+                return;
+            }
+            
+            const newFolder = {
+                id: generateId(),
+                name,
+                createdAt: new Date().toISOString()
+            };
+            
+            adminData.folders.push(newFolder);
+            saveData();
+            
+            // Clear input and render
+            folderNameInput.value = '';
+            renderFolders();
+        }
+
+        // Delete PDF
+        function deletePDF(id) {
+            if (confirm('Are you sure you want to delete this PDF?')) {
+                adminData.pdfs = adminData.pdfs.filter(pdf => pdf.id !== id);
+                saveData();
+                renderPDFs();
+            }
+        }
+
+        // Delete Folder
+        function deleteFolder(id) {
+            // Check if folder contains PDFs
+            const hasPDFs = adminData.pdfs.some(pdf => pdf.folderId === id);
+            
+            if (hasPDFs) {
+                if (!confirm('This folder contains PDFs. Delete anyway?')) {
+                    return;
+                }
+                
+                // Remove folder reference from PDFs
+                adminData.pdfs.forEach(pdf => {
+                    if (pdf.folderId === id) {
+                        pdf.folderId = null;
+                    }
+                });
+            }
+            
+            adminData.folders = adminData.folders.filter(folder => folder.id !== id);
+            saveData();
+            renderFolders();
+            renderPDFs();
+        }
+
+        // Helper Functions
+        function getFolderName(id) {
+            const folder = adminData.folders.find(f => f.id === id);
+            return folder ? folder.name : null;
+        }
+
+        function convertToViewLink(link) {
+            if (link.includes('drive.google.com')) {
+                const fileId = link.match(/\/file\/d\/([^\/]+)/)[1];
+                return `https://drive.google.com/file/d/${fileId}/preview`;
+            }
+            return link;
+        }
+
+        function truncateLink(link, maxLength = 30) {
+            if (link.length <= maxLength) return link;
+            return link.substring(0, maxLength) + '...';
+        }
+
+        function generateId() {
+            return Math.random().toString(36).substring(2, 15);
+        }
+
+        function saveData() {
+            localStorage.setItem('BaiganPDF', JSON.stringify(adminData));
+        }
+    </script>
+</body>
+</html>
